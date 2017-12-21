@@ -1,2 +1,0 @@
-# pychain
-Python blockchain implementation
