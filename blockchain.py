@@ -69,6 +69,30 @@ class BlockChain(object):
         new = Block(old.hash, data)
         self.chain.append(new)
 
+    def verify(self):
+        """Verify integrity of chain
+
+        Returns
+        -------
+        status : boolean
+            true if chain is good, false otherwise
+        """
+        # Start on second block; loop until end of chain
+        i = 1
+        while i <= len(self.chain):
+            # Make sure current blocks hash hasn't changed
+            if self.chain[i].computeHash() != self.chain[i].hash:
+                return False
+            # Get hash of previous block; compare to stored prev hash version.
+            prev = self.chain[i-1].computeHash()
+            cur = self.chain[i].previousHash
+            if prev != cur:
+                return False
+            # All tests passed; return true
+            return True
+            i += 1
+
+
     def __str__(self):
         """Print the chain
         """
@@ -82,3 +106,7 @@ if __name__ == '__main__':
     bc.add(5)
     bc.add(4)
     print(bc)
+    bc.chain[1].hash = 'BLOOP'
+    print(bc)
+    ver = bc.verify()
+    print('Blockchain good? {}'.format(ver))
